@@ -26,8 +26,8 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 NS = "{http://ProjectMalmo.microsoft.com}"
 STEP_OPTIONS = 0
 
-MAX_WAIT = 600  # Time to wait before raising an exception (high value because some operations we wait on are very slow)
-SOCKTIME = 60.0 * 4  # After this much time a socket exception will be thrown.
+MAX_WAIT = 600 * 10   # TODO undo this at some pont # Time to wait before raising an exception (high value because some operations we wait on are very slow)
+SOCKTIME = 60.0 * 4 *10 # TODO undo this at some pont # After this much time a socket exception will be thrown.
 TICK_LENGTH = 0.05
 
 logger = logging.getLogger(__name__)
@@ -95,6 +95,9 @@ class _MultiAgentEnv(gym.Env):
         self._init_interactive()
         self._init_fault_tolerance(is_fault_tolerant)
         self._init_logging(verbose)
+
+        # agent_0 can send Minecraft messages/commands each step
+        self.next_chat_message = None
 
     ############ INIT METHODS ##########
     # These methods are used to first initialize different systems in the environment
@@ -269,6 +272,11 @@ class _MultiAgentEnv(gym.Env):
     def step(self, actions) -> Tuple[dict, dict, bool, dict]:
         if not self.done:
             assert STEP_OPTIONS == 0 or STEP_OPTIONS == 2
+
+            # add chat action if there is one
+            if self.next_chat_message:
+                actions["agent_0"]["chat"] = self.next_chat_message
+            self.next_chat_message = None
 
             multi_obs = {}
             multi_reward = {}
@@ -676,6 +684,13 @@ class _MultiAgentEnv(gym.Env):
 
     def is_closed(self):
         return self._already_closed
+
+    def set_next_chat_message(self, chat):
+        """Sets the next chat message to be sent to Minecraft by agent_0
+        This can be used to send Minecraft commands
+        Make sure you have the ChatAction handler enabled in your environment
+        """
+        self.next_chat_message = chat
 
     ############# AUX HELPER METHODS ###########
 

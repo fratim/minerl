@@ -7,6 +7,7 @@ import gym
 
 from minerl.herobraine.env_spec import EnvSpec
 from minerl.herobraine.env_specs.treechop_specs import Treechop
+from minerl.herobraine.env_specs.obtain_assist_specs import ObtainMA
 from minerl.herobraine.env_specs.navigate_specs import Navigate
 from minerl.herobraine.env_specs.obtain_specs import ObtainDiamond, ObtainDiamondSurvival, ObtainIronPickaxe, Obtain, \
     ObtainDiamondDebug
@@ -18,9 +19,13 @@ import os
 # Must load non-obfuscated envs first!
 # Publish.py depends on this order for black-listing streams
 MINERL_TREECHOP_V0 = Treechop()
-#
-# # Multi Agent Treechop environment
-MINERL_TREECHOP_MA_V0 = Treechop(agent_count=2, name="MineRLTreechop-v1")
+
+# Single Agent Treechop environment
+MINERL_OBTAIN_ASSIST_SINGLE_V0 = ObtainMA(agent_count=1, name='MineRLObtainMASingle-v0')
+
+# Two Agent Treechop environment
+MINERL_OBTAIN_ASSIST_DUO_V0 = ObtainMA(agent_count=2, name='MineRLObtainMADual-v0')
+
 
 MINERL_NAVIGATE_V0 = Navigate(dense=False, extreme=False)
 MINERL_NAVIGATE_EXTREME_V0 = Navigate(dense=False, extreme=True)
@@ -81,7 +86,7 @@ MINERL_OBTAIN_DIAMOND_SURVIVAL_V0 = Obfuscated(Vectorized(ObtainDiamondSurvival(
 
 obfuscated_envs = [e for e in locals().values() if isinstance(e, Obfuscated)]
 
-# ENVS = [MINERL_OBTAIN_IRON_PICKAXE_OBF_V0]
+ENVS = [MINERL_OBTAIN_IRON_PICKAXE_OBF_V0]
 
 
 # Test environments
