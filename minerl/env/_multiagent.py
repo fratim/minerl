@@ -223,7 +223,7 @@ class _MultiAgentEnv(gym.Env):
 
         # Now we wrap
         if isinstance(self.task, EnvWrapper):
-            obs_dict = self.task.wrap_observation(obs_dict)
+            obs_dict = self.task.wrap_observation(obs_dict, actor_name)
 
         self._last_pov[actor_name] = obs_dict['pov']
         self._last_obs[actor_name] = obs_dict
@@ -245,7 +245,7 @@ class _MultiAgentEnv(gym.Env):
         # the env shouldn't be doing this IMO.
         # TODO (R): Make wrappers compatible with mutliple agents.
         if isinstance(self.task, EnvWrapper):
-            action_in = self.task.unwrap_action(action_in)
+            action_in = self.task.unwrap_action(action_in, actor_name)
 
         bottom_env_spec = self.task
         while isinstance(bottom_env_spec, EnvWrapper):

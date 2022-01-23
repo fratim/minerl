@@ -177,11 +177,11 @@ class TrajectoryDisplayBase(ScaledImageDisplay):
         pass
 
     @abc.abstractmethod
-    def process_actions(actions):
+    def process_actions(actions, agent):
         pass
 
     @abc.abstractmethod
-    def process_observations(obs):
+    def process_observations(obs, agent):
         pass
 
 

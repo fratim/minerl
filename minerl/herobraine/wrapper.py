@@ -22,73 +22,86 @@ class EnvWrapper(EnvSpec):
 
         super().__init__(self._update_name(env_to_wrap.name),
                          max_episode_steps=env_to_wrap.max_episode_steps,
-                         reward_threshold=env_to_wrap.reward_threshold)
+                         reward_threshold=env_to_wrap.reward_threshold,
+                         agent_count=env_to_wrap.agent_count)
 
     @abc.abstractmethod
     def _update_name(self, name: str) -> str:
         pass
 
     @abc.abstractmethod
-    def _wrap_observation(self, obs: OrderedDict) -> OrderedDict:
+    def _wrap_observation(self, obs: OrderedDict, agent) -> OrderedDict:
         pass
 
-    def wrap_observation(self, obs: OrderedDict):
+    def wrap_observation(self, obs: OrderedDict, agent):
         # self = obfuscated
         # env_to_wrap = vector
         # obs is just a treechop ob
         obs = copy.deepcopy(obs)
         if self._wrap_obs_fn is not None:
+            assert False # not sure when this is ever the case
             obs = self._wrap_obs_fn(obs)
 
         if minerl.utils.test.SHOULD_ASSERT: assert obs in self.env_to_wrap.observation_space
 
-        wrapped_obs = self._wrap_observation(obs)
+        # wrapped_obs = spaces.Dict({agent: self._wrap_observation(obs, agent)} for agent in self.agent_names)
+        wrapped_obs = self._wrap_observation(obs, agent)
 
         if minerl.utils.test.SHOULD_ASSERT: assert wrapped_obs in self.observation_space
         return wrapped_obs
 
     @abc.abstractmethod
-    def _wrap_action(self, act: OrderedDict) -> OrderedDict:
+    def _wrap_action(self, act: OrderedDict, agent) -> OrderedDict:
         pass
 
-    def wrap_action(self, act: OrderedDict):
+    def wrap_action(self, act: OrderedDict, agent):
         act = copy.deepcopy(act)
-        if self._wrap_act_fn is not None:
+        if self._wrap_act_fn is not None: # when is _wrap_act_fn ever used?
+            assert False # is this ever the case?
             act = self._wrap_act_fn(act)
 
         if minerl.utils.test.SHOULD_ASSERT: assert act in self.env_to_wrap.action_space
 
-        wrapped_act = self._wrap_action(act)
+        #wrapped_act = spaces.Dict({agent: self._wrap_action(act, agent)} for agent in self.agent_names)
+        wrapped_act = self._wrap_action(act, agent)
 
         if minerl.utils.test.SHOULD_ASSERT: assert wrapped_act in self.action_space
         return wrapped_act
 
     @abc.abstractmethod
-    def _unwrap_observation(self, obs: OrderedDict) -> OrderedDict:
+    def _unwrap_observation(self, obs: OrderedDict, agent) -> OrderedDict:
         pass
 
-    def unwrap_observation(self, obs: OrderedDict) -> OrderedDict:
+    def unwrap_observation(self, obs: OrderedDict, agent) -> OrderedDict:
         obs = copy.deepcopy(obs)
         if minerl.utils.test.SHOULD_ASSERT: assert obs in self.observation_space
-        obs = self._unwrap_observation(obs)
+
+        #obs = spaces.Dict({agent: self._unwrap_observation(obs, agent)} for agent in self.agent_names)
+        obs = self._unwrap_observation(obs, agent)
+
         if minerl.utils.test.SHOULD_ASSERT: assert obs in self.env_to_wrap.observation_space
 
         if self._unwrap_obs_fn is not None:
+            assert False
             obs = self._unwrap_obs_fn(obs)
 
         return obs
 
     @abc.abstractmethod
-    def _unwrap_action(self, act: OrderedDict) -> OrderedDict:
+    def _unwrap_action(self, act: OrderedDict, agent) -> OrderedDict:
         pass
 
-    def unwrap_action(self, act: OrderedDict) -> OrderedDict:
+    def unwrap_action(self, act: OrderedDict, agent) -> OrderedDict:
         act = copy.deepcopy(act)
         if minerl.utils.test.SHOULD_ASSERT: assert act in self.action_space
-        act = self._unwrap_action(act)
+
+        # act = spaces.Dict({agent: self._unwrap_action(act)} for agent in self.agent_names)
+        act = self._unwrap_action(act, agent)
+
         if minerl.utils.test.SHOULD_ASSERT: assert act in self.env_to_wrap.action_space
 
         if self._unwrap_act_fn is not None:
+            assert False
             act = self._unwrap_act_fn(act)
 
         return act

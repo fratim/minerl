@@ -25,6 +25,19 @@ class ChatAction(Action):
     def to_string(self):
         return 'chat'
 
+    def to_hero(self, x):
+        if x == 0:
+            return '' # no items passed on
+        elif x == 1:
+            return "{} {}".format(self.to_string(), "/give MineRLAgent1 minecraft:planks 1 0") # give 1 plank
+        elif x == 2:
+            return "{} {}".format(self.to_string(), "/give MineRLAgent1 minecraft:planks 10 0") # give 10 planks
+        else:
+            raise NotImplementedError
+
+    # TODO test that this implementation actually works...
+    # TODO add relative position between agents to observation space
+
     def xml_template(self) -> str:
         return str("<ChatCommands> </ChatCommands>")
 
@@ -33,7 +46,7 @@ class ChatAction(Action):
         warnings.warn("Currently, only agent_0 can use this handler")
 
         self._command = 'chat'
-        super().__init__(self.command, spaces.Text([1]))
+        super().__init__(self.command, spaces.Discrete(3))
 
     def from_universal(self, x):
         return []

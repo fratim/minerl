@@ -10,8 +10,9 @@ class AssistWrapper(gym.Wrapper):
     def __init__(self, env):
         super().__init__(env)
         self.env = env
-        self.lead_agent = "agent_0" # this agent is emulated within this wrapper
-        self.assist_agent = "agent_1"
+
+        self.assist_agent = "agent_0"
+        self.lead_agent = "agent_1" # this agent is emulated within this wrapper
 
         self.action_space = self.env.action_space[self.assist_agent]
 
