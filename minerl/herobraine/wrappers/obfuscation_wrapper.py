@@ -38,10 +38,10 @@ class Obfuscated(EnvWrapper):
         # TODO load these from file
         assert isinstance(env_to_wrap, Vectorized), 'Obfuscated env wrappers only supported for vectorized environments'
 
-        # Compute the no op vertors
-        self.observation_no_op = \
-            self.env_to_wrap.wrap_observation(self.env_to_wrap.env_to_wrap.observation_space.no_op())['vector']
-        self.action_no_op = self.env_to_wrap.wrap_action(self.env_to_wrap.env_to_wrap.action_space.no_op())['vector']
+        # Compute the no op vertors # TODO reinitialize if needed
+        # self.observation_no_op = \
+        #     self.env_to_wrap.wrap_observation(self.env_to_wrap.env_to_wrap.observation_space.no_op())['vector']
+        # self.action_no_op = self.env_to_wrap.wrap_action(self.env_to_wrap.env_to_wrap.action_space.no_op())['vector']
 
         if name:
             self.name = name
@@ -102,32 +102,34 @@ class Obfuscated(EnvWrapper):
     def create_observation_space(self):
         obs_space = copy.deepcopy(self.env_to_wrap.observation_space)
         # TODO: Properly compute the maximum
-        obs_space.spaces['vector'] = spaces.Box(low=-1.2, high=1.2, shape=[self.obf_vector_len])
+        for agent in self.agent_names:
+            obs_space[agent].spaces['vector'] = spaces.Box(low=-1.2, high=1.2, shape=[self.obf_vector_len])
         return obs_space
 
     def create_action_space(self):
         act_space = copy.deepcopy(self.env_to_wrap.action_space)
-        act_space.spaces['vector'] = spaces.Box(low=-1.05, high=1.05, shape=[self.obf_vector_len])
+        for agent in self.agent_names:
+            act_space[agent].spaces['vector'] = spaces.Box(low=-1.05, high=1.05, shape=[self.obf_vector_len])
         return act_space
 
     def create_monitors(self):
         return []  # Disable monitors for obfuscated spaces
 
-    def _wrap_observation(self, obs: OrderedDict) -> OrderedDict:
+    def _wrap_observation(self, obs: OrderedDict, agent) -> OrderedDict:
         obs['vector'] = self.obs_enc(obs['vector'])
         return obs
 
-    def _wrap_action(self, act: OrderedDict) -> OrderedDict:
+    def _wrap_action(self, act: OrderedDict, agent) -> OrderedDict:
         act['vector'] = self.ac_enc(act['vector'])
         return act
 
-    def _unwrap_observation(self, obs: OrderedDict) -> OrderedDict:
+    def _unwrap_observation(self, obs: OrderedDict, agent) -> OrderedDict:
         obs['vector'] = np.clip(
             self.obs_dec(obs['vector']),  # decode then CLIP
             0, 1)
         return obs
 
-    def _unwrap_action(self, act: OrderedDict) -> OrderedDict:
+    def _unwrap_action(self, act: OrderedDict, agent) -> OrderedDict:
         act['vector'] = np.clip(
             self.ac_dec(act['vector']),  # decode then CLIP
             0, 1)

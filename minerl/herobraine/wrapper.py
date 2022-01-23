@@ -39,8 +39,7 @@ class EnvWrapper(EnvSpec):
         # obs is just a treechop ob
         obs = copy.deepcopy(obs)
         if self._wrap_obs_fn is not None:
-            assert False # not sure when this is ever the case
-            obs = self._wrap_obs_fn(obs)
+            obs = self._wrap_obs_fn(obs, agent)
 
         if minerl.utils.test.SHOULD_ASSERT: assert obs in self.env_to_wrap.observation_space
 
@@ -56,9 +55,8 @@ class EnvWrapper(EnvSpec):
 
     def wrap_action(self, act: OrderedDict, agent):
         act = copy.deepcopy(act)
-        if self._wrap_act_fn is not None: # when is _wrap_act_fn ever used?
-            assert False # is this ever the case?
-            act = self._wrap_act_fn(act)
+        if self._wrap_act_fn is not None:
+            act = self._wrap_act_fn(act, agent)
 
         if minerl.utils.test.SHOULD_ASSERT: assert act in self.env_to_wrap.action_space
 
@@ -82,14 +80,14 @@ class EnvWrapper(EnvSpec):
         if minerl.utils.test.SHOULD_ASSERT: assert obs in self.env_to_wrap.observation_space
 
         if self._unwrap_obs_fn is not None:
-            assert False
-            obs = self._unwrap_obs_fn(obs)
+            obs = self._unwrap_obs_fn(obs, agent)
 
         return obs
 
     @abc.abstractmethod
     def _unwrap_action(self, act: OrderedDict, agent) -> OrderedDict:
         pass
+
 
     def unwrap_action(self, act: OrderedDict, agent) -> OrderedDict:
         act = copy.deepcopy(act)
@@ -101,8 +99,7 @@ class EnvWrapper(EnvSpec):
         if minerl.utils.test.SHOULD_ASSERT: assert act in self.env_to_wrap.action_space
 
         if self._unwrap_act_fn is not None:
-            assert False
-            act = self._unwrap_act_fn(act)
+            act = self._unwrap_act_fn(act, agent)
 
         return act
 

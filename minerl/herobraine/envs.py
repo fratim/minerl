@@ -16,6 +16,12 @@ from minerl.herobraine.wrappers import Obfuscated, Vectorized
 import minerl.data.version
 import os
 
+comp_obfuscator_dir = os.path.join(
+
+    # TODO FORMAT THIS AUTOMATICALLY USING CIRCULAR IMPORTS
+    os.path.dirname(os.path.abspath(__file__)), "env_specs", "obfuscators", "comp", "v3")
+
+
 # Must load non-obfuscated envs first!
 # Publish.py depends on this order for black-listing streams
 MINERL_TREECHOP_V0 = Treechop()
@@ -23,11 +29,10 @@ MINERL_TREECHOP_V0 = Treechop()
 # Single Agent Treechop environment
 MINERL_OBTAIN_ASSIST_SINGLE_V0 = ObtainMA(agent_count=1, name='MineRLObtainMASingle-v0')
 
-# Single Agent Treechop environment Vectorized
-MINERL_OBTAIN_ASSIST_SINGLE_VEC_V0 = Vectorized(MINERL_OBTAIN_ASSIST_SINGLE_V0, common_envs=None)
-
 # Two Agent Treechop environment
 MINERL_OBTAIN_ASSIST_DUO_V0 = ObtainMA(agent_count=2, name='MineRLObtainMADual-v0')
+
+
 
 MINERL_NAVIGATE_V0 = Navigate(dense=False, extreme=False)
 MINERL_NAVIGATE_EXTREME_V0 = Navigate(dense=False, extreme=True)
@@ -57,17 +62,18 @@ MINERL_OBTAIN_IRON_PICKAXE_DENSE_V0 = ObtainIronPickaxe(dense=True)
 # Competition environments.
 # TODO: Determine naming schemes
 comp_envs = [MINERL_OBTAIN_DIAMOND_V0, MINERL_TREECHOP_V0, MINERL_NAVIGATE_V0, MINERL_OBTAIN_IRON_PICKAXE_V0, MINERL_OBTAIN_ASSIST_SINGLE_V0]
-comp_obfuscator_dir = os.path.join(
-
-    # TODO FORMAT THIS AUTOMATICALLY USING CIRCULAR IMPORTS
-    os.path.dirname(os.path.abspath(__file__)), "env_specs", "obfuscators", "comp", "v3")
 
 # Single Agent Treechop environment Vectorized
-# MINERL_OBTAIN_ASSIST_SINGLE_VEC_V0 = Vectorized(MINERL_OBTAIN_ASSIST_SINGLE_V0, common_envs=comp_envs) #TODO undo this
+MINERL_OBTAIN_ASSIST_SINGLE_VEC_V0 = Vectorized(MINERL_OBTAIN_ASSIST_SINGLE_V0, common_envs=comp_envs)
+
+# Single Agent Treechop environment Vectorized Obfuscated
+MINERL_OBTAIN_ASSIST_SINGLE_VEC_OBF_V0 = Obfuscated(MINERL_OBTAIN_ASSIST_SINGLE_VEC_V0, comp_obfuscator_dir)
 
 # Two Agent Treechop environment Vectorized
 MINERL_OBTAIN_ASSIST_DUO_VEC_V0 = Vectorized(MINERL_OBTAIN_ASSIST_DUO_V0, common_envs=comp_envs)
 
+# Two Agent Treechop environment Vectorized Obfuscated
+MINERL_OBTAIN_ASSIST_DUO_VEC_OBF_V0 = Obfuscated(MINERL_OBTAIN_ASSIST_DUO_VEC_V0, comp_obfuscator_dir)
 
 # MINERL_TREECHOP_OBF_V0 = Obfuscated(Vectorized(MINERL_TREECHOP_V0, common_envs=comp_envs), comp_obfuscator_dir)
 #
