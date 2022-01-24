@@ -10,6 +10,8 @@ from minerl.herobraine.hero import spaces
 from minerl.herobraine.wrappers.util import union_spaces, flatten_spaces, intersect_space
 from minerl.herobraine.wrapper import EnvWrapper
 
+import copy
+
 
 class Vectorized(EnvWrapper):
     """
@@ -25,11 +27,22 @@ class Vectorized(EnvWrapper):
         self.common_envs = [env_to_wrap] if common_envs is None or len(common_envs) == 0 else common_envs
 
         # Gather all of the handlers for the common_env
-        self.common_actions = reduce(union_spaces, [env.actionables for env in self.common_envs])
-        self.flat_actions, self.remaining_action_space = flatten_spaces(self.common_actions)
-        self.action_vector_len = sum(space.shape[0] for space in self.flat_actions)
+        common_actions_all_agents = reduce(union_spaces, [env.actionables for env in self.common_envs])
+        self.common_actions = OrderedDict({agent: copy.deepcopy(common_actions_all_agents) for agent in self.env_to_wrap.agent_names})
+
+        if self.env_to_wrap.agent_count > 1:
+            for elem in self.common_actions["agent_1"]:
+                if elem.to_string() == 'chat':
+                    self.common_actions["agent_1"].remove(elem)
+
+        self.flat_actions = OrderedDict({agent: flatten_spaces(self.common_actions[agent])[0] for agent in self.env_to_wrap.agent_names})
+        self.remaining_action_space = OrderedDict({agent: flatten_spaces(self.common_actions[agent])[1] for agent in self.env_to_wrap.agent_names})
+
+
+        self.action_vector_len = OrderedDict({agent: sum(space.shape[0] for space in self.flat_actions[agent]) for agent in self.env_to_wrap.agent_names})
+
         self.common_action_space = spaces.Dict(
-            {agent: spaces.Dict({hdl.to_string(): hdl.space for hdl in self.common_actions}) for agent in self.env_to_wrap.agent_names})
+            {agent: spaces.Dict({hdl.to_string(): hdl.space for hdl in self.common_actions[agent]}) for agent in self.env_to_wrap.agent_names})
 
         self.common_observations = reduce(union_spaces, [env.observables for env in self.common_envs])
         self.flat_observations, self.remaining_observation_space = flatten_spaces(self.common_observations)
@@ -79,12 +92,12 @@ class Vectorized(EnvWrapper):
 
 
     def create_action_space(self):
-        def get_action_space_agent():
-            act_list = self.remaining_action_space
-            act_list.append(('vector', spaces.Box(low=0.0, high=1.0, shape=[self.action_vector_len], dtype=np.float32)))
+        def get_action_space_agent(agent):
+            act_list = self.remaining_action_space[agent]
+            act_list.append(('vector', spaces.Box(low=0.0, high=1.0, shape=[self.action_vector_len[agent]], dtype=np.float32)))
             return sorted(act_list)
 
-        aspace = spaces.Dict({aname: spaces.Dict(get_action_space_agent()) for aname in self.agent_names})
+        aspace = spaces.Dict({aname: spaces.Dict(get_action_space_agent(aname)) for aname in self.agent_names})
         return aspace
 
 

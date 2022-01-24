@@ -183,12 +183,15 @@ class EnvSpec(abc.ABC):
             }) for agent in self.agent_names
         })
 
+    # TODO remove this hack
     def create_action_space(self):
-        return spaces.Dict({
+        aspace = spaces.Dict({
             agent: spaces.Dict({
-                a.to_string(): a.space for a in self.actionables
+                a.to_string(): a.space for a in self.actionables if not (a.command == "chat" and agent == "agent_1")
             }) for agent in self.agent_names
         })
+
+        return aspace
 
     def create_monitor_space(self):
         return spaces.Dict({

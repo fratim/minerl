@@ -123,9 +123,9 @@ class ObtainMA(SimpleEmbodimentEnvSpec):
     def create_actionables(self) -> List[Handler]:
         """Will be used to reset agents health, etc. without resetting the entire environment"""
         return super().create_actionables() \
-        #        + [
-        #     handlers.ChatAction()
-        # ]
+               + [
+            handlers.ChatAction()
+        ]
 
     def create_observables(self) -> List[Handler]:
         # TODO: Parameterize these observations.

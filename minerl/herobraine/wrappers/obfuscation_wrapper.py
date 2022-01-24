@@ -103,36 +103,42 @@ class Obfuscated(EnvWrapper):
         obs_space = copy.deepcopy(self.env_to_wrap.observation_space)
         # TODO: Properly compute the maximum
         for agent in self.agent_names:
-            obs_space[agent].spaces['vector'] = spaces.Box(low=-1.2, high=1.2, shape=[self.obf_vector_len])
+            if agent == "agent_1":
+                obs_space[agent].spaces['vector'] = spaces.Box(low=-1.2, high=1.2, shape=[self.obf_vector_len])
         return obs_space
 
     def create_action_space(self):
         act_space = copy.deepcopy(self.env_to_wrap.action_space)
         for agent in self.agent_names:
-            act_space[agent].spaces['vector'] = spaces.Box(low=-1.05, high=1.05, shape=[self.obf_vector_len])
+            if agent == "agent_1":
+                act_space[agent].spaces['vector'] = spaces.Box(low=-1.05, high=1.05, shape=[self.obf_vector_len])
         return act_space
 
     def create_monitors(self):
         return []  # Disable monitors for obfuscated spaces
 
     def _wrap_observation(self, obs: OrderedDict, agent) -> OrderedDict:
-        obs['vector'] = self.obs_enc(obs['vector'])
+        if agent == "agent_1":
+            obs['vector'] = self.obs_enc(obs['vector'])
         return obs
 
     def _wrap_action(self, act: OrderedDict, agent) -> OrderedDict:
-        act['vector'] = self.ac_enc(act['vector'])
+        if agent == "agent_1":
+            act['vector'] = self.ac_enc(act['vector'])
         return act
 
     def _unwrap_observation(self, obs: OrderedDict, agent) -> OrderedDict:
-        obs['vector'] = np.clip(
-            self.obs_dec(obs['vector']),  # decode then CLIP
-            0, 1)
+        if agent == "agent_1":
+            obs['vector'] = np.clip(
+                self.obs_dec(obs['vector']),  # decode then CLIP
+                0, 1)
         return obs
 
     def _unwrap_action(self, act: OrderedDict, agent) -> OrderedDict:
-        act['vector'] = np.clip(
-            self.ac_dec(act['vector']),  # decode then CLIP
-            0, 1)
+        if agent == "agent_1":
+            act['vector'] = np.clip(
+                self.ac_dec(act['vector']),  # decode then CLIP
+                0, 1)
         return act
 
     def get_docstring(self):
