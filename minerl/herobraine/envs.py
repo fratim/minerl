@@ -61,7 +61,7 @@ MINERL_OBTAIN_IRON_PICKAXE_DENSE_V0 = ObtainIronPickaxe(dense=True)
 
 # Competition environments.
 # TODO: Determine naming schemes
-comp_envs = [MINERL_OBTAIN_DIAMOND_V0, MINERL_TREECHOP_V0, MINERL_NAVIGATE_V0, MINERL_OBTAIN_IRON_PICKAXE_V0, MINERL_OBTAIN_ASSIST_SINGLE_V0]
+comp_envs = [MINERL_OBTAIN_DIAMOND_V0, MINERL_TREECHOP_V0, MINERL_NAVIGATE_V0, MINERL_OBTAIN_IRON_PICKAXE_V0]
 
 # Single Agent Treechop environment Vectorized
 MINERL_OBTAIN_ASSIST_SINGLE_VEC_V0 = Vectorized(MINERL_OBTAIN_ASSIST_SINGLE_V0, common_envs=comp_envs)
@@ -75,33 +75,33 @@ MINERL_OBTAIN_ASSIST_DUO_VEC_V0 = Vectorized(MINERL_OBTAIN_ASSIST_DUO_V0, common
 # Two Agent Treechop environment Vectorized Obfuscated
 MINERL_OBTAIN_ASSIST_DUO_VEC_OBF_V0 = Obfuscated(MINERL_OBTAIN_ASSIST_DUO_VEC_V0, comp_obfuscator_dir)
 
-# MINERL_TREECHOP_OBF_V0 = Obfuscated(Vectorized(MINERL_TREECHOP_V0, common_envs=comp_envs), comp_obfuscator_dir)
-#
-# MINERL_NAVIGATE_OBF_V0 = Obfuscated(Vectorized(MINERL_NAVIGATE_V0, common_envs=comp_envs), comp_obfuscator_dir)
-# MINERL_NAVIGATE_EXTREME_OBF_V0 = Obfuscated(Vectorized(MINERL_NAVIGATE_EXTREME_V0, common_envs=comp_envs),
-#                                             comp_obfuscator_dir)
-# MINERL_NAVIGATE_DENSE_OBF_V0 = Obfuscated(Vectorized(MINERL_NAVIGATE_DENSE_V0, common_envs=comp_envs),
-#                                           comp_obfuscator_dir)
-# MINERL_NAVIGATE_DENSE_EXTREME_OBF_V0 = Obfuscated(Vectorized(MINERL_NAVIGATE_DENSE_EXTREME_V0, common_envs=comp_envs),
-#                                                   comp_obfuscator_dir)
-#
-# MINERL_OBTAIN_DIAMOND_OBF_V0 = Obfuscated(Vectorized(MINERL_OBTAIN_DIAMOND_V0, common_envs=comp_envs),
-#                                           comp_obfuscator_dir)
-# MINERL_OBTAIN_DIAMOND_DENSE_OBF_V0 = Obfuscated(Vectorized(MINERL_OBTAIN_DIAMOND_DENSE_V0, common_envs=comp_envs),
-#                                                 comp_obfuscator_dir)
-#
-# MINERL_OBTAIN_IRON_PICKAXE_OBF_V0 = Obfuscated(Vectorized(MINERL_OBTAIN_IRON_PICKAXE_V0, common_envs=comp_envs),
-#                                                comp_obfuscator_dir)
-# MINERL_OBTAIN_IRON_PICKAXE_DENSE_OBF_V0 = Obfuscated(
-#     Vectorized(MINERL_OBTAIN_IRON_PICKAXE_DENSE_V0, common_envs=comp_envs), comp_obfuscator_dir)
+MINERL_TREECHOP_OBF_V0 = Obfuscated(Vectorized(MINERL_TREECHOP_V0, common_envs=comp_envs), comp_obfuscator_dir)
 
-# Survival envs
-# MINERL_OBTAIN_DIAMOND_SURVIVAL_V0 = Obfuscated(Vectorized(ObtainDiamondSurvival(dense=True), common_envs=comp_envs),
-#                                                comp_obfuscator_dir, 'MineRLObtainDiamondSurvivalVectorObf-v0')
+MINERL_NAVIGATE_OBF_V0 = Obfuscated(Vectorized(MINERL_NAVIGATE_V0, common_envs=comp_envs), comp_obfuscator_dir)
+MINERL_NAVIGATE_EXTREME_OBF_V0 = Obfuscated(Vectorized(MINERL_NAVIGATE_EXTREME_V0, common_envs=comp_envs),
+                                            comp_obfuscator_dir)
+MINERL_NAVIGATE_DENSE_OBF_V0 = Obfuscated(Vectorized(MINERL_NAVIGATE_DENSE_V0, common_envs=comp_envs),
+                                          comp_obfuscator_dir)
+MINERL_NAVIGATE_DENSE_EXTREME_OBF_V0 = Obfuscated(Vectorized(MINERL_NAVIGATE_DENSE_EXTREME_V0, common_envs=comp_envs),
+                                                  comp_obfuscator_dir)
 
-# obfuscated_envs = [e for e in locals().values() if isinstance(e, Obfuscated)]
+MINERL_OBTAIN_DIAMOND_OBF_V0 = Obfuscated(Vectorized(MINERL_OBTAIN_DIAMOND_V0, common_envs=comp_envs),
+                                          comp_obfuscator_dir)
+MINERL_OBTAIN_DIAMOND_DENSE_OBF_V0 = Obfuscated(Vectorized(MINERL_OBTAIN_DIAMOND_DENSE_V0, common_envs=comp_envs),
+                                                comp_obfuscator_dir)
 
-# ENVS = [MINERL_OBTAIN_IRON_PICKAXE_OBF_V0]
+MINERL_OBTAIN_IRON_PICKAXE_OBF_V0 = Obfuscated(Vectorized(MINERL_OBTAIN_IRON_PICKAXE_V0, common_envs=comp_envs),
+                                               comp_obfuscator_dir)
+MINERL_OBTAIN_IRON_PICKAXE_DENSE_OBF_V0 = Obfuscated(
+    Vectorized(MINERL_OBTAIN_IRON_PICKAXE_DENSE_V0, common_envs=comp_envs), comp_obfuscator_dir)
+
+#Survival envs
+MINERL_OBTAIN_DIAMOND_SURVIVAL_V0 = Obfuscated(Vectorized(ObtainDiamondSurvival(dense=True), common_envs=comp_envs),
+                                               comp_obfuscator_dir, 'MineRLObtainDiamondSurvivalVectorObf-v0')
+
+obfuscated_envs = [e for e in locals().values() if isinstance(e, Obfuscated)]
+
+ENVS = [MINERL_OBTAIN_IRON_PICKAXE_OBF_V0]
 
 
 # Test environments
@@ -154,15 +154,15 @@ BASIC_ENV_SPECS: List[EnvSpec] = [
 ]
 
 COMPETITION_ENV_SPECS: List[EnvSpec] = [
-    # MINERL_TREECHOP_OBF_V0,
-    # MINERL_NAVIGATE_OBF_V0,
-    # MINERL_NAVIGATE_DENSE_OBF_V0,
-    # MINERL_NAVIGATE_EXTREME_OBF_V0,
-    # MINERL_NAVIGATE_DENSE_EXTREME_OBF_V0,
-    # MINERL_OBTAIN_DIAMOND_OBF_V0,
-    # MINERL_OBTAIN_DIAMOND_DENSE_OBF_V0,
-    # MINERL_OBTAIN_IRON_PICKAXE_OBF_V0,
-    # MINERL_OBTAIN_IRON_PICKAXE_DENSE_OBF_V0,
+    MINERL_TREECHOP_OBF_V0,
+    MINERL_NAVIGATE_OBF_V0,
+    MINERL_NAVIGATE_DENSE_OBF_V0,
+    MINERL_NAVIGATE_EXTREME_OBF_V0,
+    MINERL_NAVIGATE_DENSE_EXTREME_OBF_V0,
+    MINERL_OBTAIN_DIAMOND_OBF_V0,
+    MINERL_OBTAIN_DIAMOND_DENSE_OBF_V0,
+    MINERL_OBTAIN_IRON_PICKAXE_OBF_V0,
+    MINERL_OBTAIN_IRON_PICKAXE_DENSE_OBF_V0,
 ]
 
 BASALT_COMPETITION_ENV_SPECS: List[EnvSpec] = [

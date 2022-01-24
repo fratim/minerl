@@ -18,6 +18,7 @@ SIZE_FILE_NAME = 'size'
 ACTION_OBFUSCATOR_FILE_NAME = 'act.secret.compat.npz'
 OBSERVATION_OBFUSCATOR_FILE_NAME = 'obs.secret.compat.npz'
 
+AGENT_0_OBF = True
 
 class Obfuscated(EnvWrapper):
 
@@ -103,14 +104,14 @@ class Obfuscated(EnvWrapper):
         obs_space = copy.deepcopy(self.env_to_wrap.observation_space)
         # TODO: Properly compute the maximum
         for agent in self.agent_names:
-            if agent == "agent_1":
+            if agent == "agent_1" or AGENT_0_OBF:
                 obs_space[agent].spaces['vector'] = spaces.Box(low=-1.2, high=1.2, shape=[self.obf_vector_len])
         return obs_space
 
     def create_action_space(self):
         act_space = copy.deepcopy(self.env_to_wrap.action_space)
         for agent in self.agent_names:
-            if agent == "agent_1":
+            if agent == "agent_1" or AGENT_0_OBF:
                 act_space[agent].spaces['vector'] = spaces.Box(low=-1.05, high=1.05, shape=[self.obf_vector_len])
         return act_space
 
@@ -118,24 +119,24 @@ class Obfuscated(EnvWrapper):
         return []  # Disable monitors for obfuscated spaces
 
     def _wrap_observation(self, obs: OrderedDict, agent) -> OrderedDict:
-        if agent == "agent_1":
+        if agent == "agent_1" or AGENT_0_OBF:
             obs['vector'] = self.obs_enc(obs['vector'])
         return obs
 
     def _wrap_action(self, act: OrderedDict, agent) -> OrderedDict:
-        if agent == "agent_1":
+        if agent == "agent_1" or AGENT_0_OBF:
             act['vector'] = self.ac_enc(act['vector'])
         return act
 
     def _unwrap_observation(self, obs: OrderedDict, agent) -> OrderedDict:
-        if agent == "agent_1":
+        if agent == "agent_1" or AGENT_0_OBF:
             obs['vector'] = np.clip(
                 self.obs_dec(obs['vector']),  # decode then CLIP
                 0, 1)
         return obs
 
     def _unwrap_action(self, act: OrderedDict, agent) -> OrderedDict:
-        if agent == "agent_1":
+        if agent == "agent_1" or AGENT_0_OBF:
             act['vector'] = np.clip(
                 self.ac_dec(act['vector']),  # decode then CLIP
                 0, 1)

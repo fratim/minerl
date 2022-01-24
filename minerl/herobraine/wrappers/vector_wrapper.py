@@ -12,6 +12,7 @@ from minerl.herobraine.wrapper import EnvWrapper
 
 import copy
 
+AGENT_0_VECTORIZED = True
 
 class Vectorized(EnvWrapper):
     """
@@ -58,10 +59,15 @@ class Vectorized(EnvWrapper):
         self.common_observation_space = spaces.Dict(
             {agent: spaces.Dict({hdl.to_string(): hdl.space for hdl in self.common_observations[agent]}) for agent in self.env_to_wrap.agent_names})
 
+        # if self.env_to_wrap.agent_count == 1:
+        #     for item in [self.common_actions, self.flat_actions, self.remaining_action_space, self.action_vector_len, self.common_action_space,
+        #                  self.common_observations, self.flat_observations, self.remaining_observation_space, self.observation_vector_len, self.common_observation_space]:
+        #         item = item["agent_0"]
+
         super().__init__(env_to_wrap)
 
     def _wrap_observation(self, obs: OrderedDict, agent) -> OrderedDict:
-        if agent == "agent_1":
+        if agent == "agent_1" or AGENT_0_VECTORIZED:
             flat_obs_part = self.common_observation_space[agent].flat_map(obs)
             wrapped_obs = self.common_observation_space[agent].unflattenable_map(obs)
             wrapped_obs['vector'] = flat_obs_part
@@ -71,7 +77,7 @@ class Vectorized(EnvWrapper):
             return obs
 
     def _wrap_action(self, act: OrderedDict, agent) -> OrderedDict:
-        if agent == "agent_1":
+        if agent == "agent_1" or AGENT_0_VECTORIZED:
             flat_act_part = self.common_action_space[agent].flat_map(act)
             wrapped_act = self.common_action_space[agent].unflattenable_map(act)
             wrapped_act['vector'] = flat_act_part
@@ -81,14 +87,14 @@ class Vectorized(EnvWrapper):
             return act
 
     def _unwrap_observation(self, obs: OrderedDict, agent) -> OrderedDict:
-        if agent == "agent_1":
+        if agent == "agent_1" or AGENT_0_VECTORIZED:
             full_obs = self.common_observation_space[agent].unmap_mixed(obs['vector'], obs)
             return intersect_space(self.env_to_wrap.observation_space[agent], full_obs)
         else:
             return obs
 
     def _unwrap_action(self, act: OrderedDict, agent) -> OrderedDict:
-        if agent == "agent_1":
+        if agent == "agent_1" or AGENT_0_VECTORIZED:
             full_act = self.common_action_space[agent].unmap_mixed(act['vector'], act)
             return intersect_space(self.env_to_wrap.action_space[agent], full_act)
         else:
@@ -97,7 +103,7 @@ class Vectorized(EnvWrapper):
     def create_observation_space(self):
 
         def get_observation_space_agent(agent):
-            if agent == "agent_1":
+            if agent == "agent_1" or AGENT_0_VECTORIZED:
                 obs_list = self.remaining_observation_space[agent]
                 obs_list.append(('vector', spaces.Box(low=0.0, high=1.0, shape=[self.observation_vector_len[agent]], dtype=np.float32)))
                 return spaces.Dict(sorted(obs_list))
@@ -116,7 +122,7 @@ class Vectorized(EnvWrapper):
 
     def create_action_space(self):
         def get_action_space_agent(agent):
-            if agent == "agent_1":
+            if agent == "agent_1" or AGENT_0_VECTORIZED:
                 act_list = self.remaining_action_space[agent]
                 act_list.append(('vector', spaces.Box(low=0.0, high=1.0, shape=[self.action_vector_len[agent]], dtype=np.float32)))
                 return spaces.Dict(sorted(act_list))

@@ -20,22 +20,23 @@ class _SingleAgentEnv(_MultiAgentEnv):
 
     def reset(self) -> Dict[str, Any]:
         multi_obs = super().reset()
-        # return multi_obs[self.task.agent_names[0]]
-        return multi_obs
+        return multi_obs[self.task.agent_names[0]]
+        #return multi_obs
 
     def step(self, single_agent_action: Dict[str, Any]) -> Tuple[
         Dict[str, Any], float, bool, Dict[str, Any]]:
-        # aname = self.task.agent_names[0]
-        # multi_agent_action = {
-        #     aname: single_agent_action
-        # }
-        obs, rew, done, info = super().step(single_agent_action)
+        aname = self.task.agent_names[0]
+        multi_agent_action = {
+            aname: single_agent_action
+        }
+        obs, rew, done, info = super().step(multi_agent_action)
+        #obs, rew, done, info = super().step(single_agent_action)
 
-        return obs, rew, done, info
+        return obs[aname], rew[aname], done, info[aname]
 
     def render(self, mode='human'):
-        #return super().render(mode)[self.task.agent_names[0]]
-        return super().render(mode)
+        return super().render(mode)[self.task.agent_names[0]]
+        #return super().render(mode)
 
     def _check_action(self, actor_name, action, env_spec):
         # TODO: Refactor to move to the env spec.
