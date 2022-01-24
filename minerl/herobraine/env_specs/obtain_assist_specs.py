@@ -108,9 +108,11 @@ class ObtainMA(SimpleEmbodimentEnvSpec):
 
     def create_rewardables(self) -> List[Handler]:
         return [
-            handlers.RewardForCollectingItems([
-                dict(type="log", amount=1, reward=1.0),
-            ])
+            # handlers.RewardForCollectingItems([
+            #     dict(type="log", amount=1, reward=1.0),
+            # ])
+            # ,
+            # handlers.RewardForDistanceToZero()
         ]
 
     def create_agent_start(self) -> List[Handler]:
