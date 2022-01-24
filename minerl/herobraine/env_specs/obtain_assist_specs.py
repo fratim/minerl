@@ -154,7 +154,8 @@ class ObtainMA(SimpleEmbodimentEnvSpec):
                 'air', 'wooden_axe', 'wooden_pickaxe', 'stone_axe', 'stone_pickaxe', 'iron_axe', 'iron_pickaxe', none,
                 # TODO (R): REMOVE NONE FOR MINERL-v1
                 other
-            ], _default='air', _other=other)
+            ], _default='air', _other=other),
+            handlers.ObservationFromCurrentLocation()
         ]
 
     def create_agent_handlers(self) -> List[Handler]:

@@ -179,7 +179,7 @@ class EnvSpec(abc.ABC):
     def create_observation_space(self):
         return spaces.Dict({
             agent: spaces.Dict({
-                o.to_string(): o.space for o in self.observables
+                o.to_string(): o.space for o in self.observables if not (o.to_string() == "location_stats" and agent == "agent_1")
             }) for agent in self.agent_names
         })
 

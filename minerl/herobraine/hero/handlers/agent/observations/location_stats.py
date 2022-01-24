@@ -29,15 +29,15 @@ class ObservationFromCurrentLocation(TranslationHandlerGroup):
     def __init__(self):
         super(ObservationFromCurrentLocation, self).__init__(
             handlers=[
-                _SunBrightnessObservation(),
-                _SkyLightLevelObservation(),
-                _LightLevelObservation(),
-                _CanSeeSkyObservation(),
-                _BiomeRainfallObservation(),
-                _BiomeTemperatureObservation(),
-                _IsRainingObservation(),
+                #_SunBrightnessObservation(),
+                #_SkyLightLevelObservation(),
+                #_LightLevelObservation(),
+                #_CanSeeSkyObservation(),
+                #_BiomeRainfallObservation(),
+                #_BiomeTemperatureObservation(),
+                #_IsRainingObservation(),
                 # TODO _BiomeNameObservation(),
-                _BiomeIDObservation(),
+                #_BiomeIDObservation(),
                 _PitchObservation(),
                 _YawObservation(),
                 _XPositionObservation(),

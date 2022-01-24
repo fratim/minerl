@@ -404,7 +404,7 @@ class _MultiAgentEnv(gym.Env):
         for agent in self.task.agent_names:
             if agent not in self.viewers:
                 from minerl.viewer.trajectory_display import HumanTrajectoryDisplay, VectorTrajectoryDisplay
-                vector_display = 'Vector' in self.task.name
+                vector_display = True if 'vector' in obs[agent].keys() else False  # "'Vector' in self.task.name
                 header = self.task.name
                 # TODO: env_specs should specify renderers.
                 instructions = '{}.render()\n Actions listed below.'.format(header)
