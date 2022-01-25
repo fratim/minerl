@@ -64,7 +64,7 @@ MINERL_OBTAIN_IRON_PICKAXE_DENSE_V0 = ObtainIronPickaxe(dense=True)
 comp_envs = [MINERL_OBTAIN_DIAMOND_V0, MINERL_TREECHOP_V0, MINERL_NAVIGATE_V0, MINERL_OBTAIN_IRON_PICKAXE_V0]
 
 # Single Agent Treechop environment Vectorized
-MINERL_OBTAIN_ASSIST_SINGLE_VEC_V0 = Vectorized(MINERL_OBTAIN_ASSIST_SINGLE_V0, common_envs=comp_envs)
+MINERL_OBTAIN_ASSIST_SINGLE_VEC_V0 = Vectorized(MINERL_OBTAIN_ASSIST_SINGLE_V0, common_envs=None)
 
 # Single Agent Treechop environment Vectorized Obfuscated
 MINERL_OBTAIN_ASSIST_SINGLE_VEC_OBF_V0 = Obfuscated(MINERL_OBTAIN_ASSIST_SINGLE_VEC_V0, comp_obfuscator_dir)

@@ -82,21 +82,23 @@ class _SkyLightLevelObservation(_FullStatsObservation):
                          default_if_missing=0.71)
 
 
+position_abs_max = 10000.0
+
 class _XPositionObservation(_FullStatsObservation):
     def __init__(self):
-        super().__init__(key_list=['xpos'], space=spaces.Box(low=-640000.0, high=640000.0, shape=(), dtype=np.float),
+        super().__init__(key_list=['xpos'], space=spaces.Box(low=-position_abs_max, high=position_abs_max, shape=(), dtype=np.float),
                          default_if_missing=0.0)
 
 
 class _YPositionObservation(_FullStatsObservation):
     def __init__(self):
-        super().__init__(key_list=['ypos'], space=spaces.Box(low=-640000.0, high=640000.0, shape=(), dtype=np.float),
+        super().__init__(key_list=['ypos'], space=spaces.Box(low=-position_abs_max, high=position_abs_max, shape=(), dtype=np.float),
                          default_if_missing=0.0)
 
 
 class _ZPositionObservation(_FullStatsObservation):
     def __init__(self):
-        super().__init__(key_list=['zpos'], space=spaces.Box(low=-640000.0, high=640000.0, shape=(), dtype=np.float),
+        super().__init__(key_list=['zpos'], space=spaces.Box(low=-position_abs_max, high=position_abs_max, shape=(), dtype=np.float),
                          default_if_missing=0.0)
 
 

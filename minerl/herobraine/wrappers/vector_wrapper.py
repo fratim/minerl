@@ -71,7 +71,7 @@ class Vectorized(EnvWrapper):
             flat_obs_part = self.common_observation_space[agent].flat_map(obs)
             wrapped_obs = self.common_observation_space[agent].unflattenable_map(obs)
             wrapped_obs['vector'] = flat_obs_part
-
+            wrapped_obs['raw'] = obs
             return wrapped_obs
         else:
             return obs
