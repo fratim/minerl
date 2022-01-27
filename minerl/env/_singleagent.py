@@ -15,6 +15,11 @@ class _SingleAgentEnv(_MultiAgentEnv):
 
     def __init__(self, *args, **kwargs):
         super(_SingleAgentEnv, self).__init__(*args, **kwargs)
+
+        self.last_obs = None
+        self.last_rew = None
+        self.last_info = None
+
         assert self.task.agent_count == 1, (
             "Using the minerl.env._SingleAgentEnv when multiple agents are specified. Error.")
 
@@ -30,13 +35,19 @@ class _SingleAgentEnv(_MultiAgentEnv):
             aname: single_agent_action
         }
         obs, rew, done, info = super().step(multi_agent_action)
-        #obs, rew, done, info = super().step(single_agent_action)
+
+        if not isinstance(info, dict) or info["agent_0"] != dict() or obs is None or obs["agent_0"] is None:
+            print("+++++++++++\n \n \n \n \n \n \n \n \n An error occured \n \n \n \n \n \n \n \n+++++++++++++")
+            return self.last_obs, self.last_rew, 1, self.last_info
+
+        self.last_obs = obs[aname]
+        self.last_rew = rew[aname]
+        self.last_info = info[aname]
 
         return obs[aname], rew[aname], done, info[aname]
 
     def render(self, mode='human'):
         return super().render(mode)[self.task.agent_names[0]]
-        #return super().render(mode)
 
     def _check_action(self, actor_name, action, env_spec):
         # TODO: Refactor to move to the env spec.
@@ -47,6 +58,7 @@ class _SingleAgentEnv(_MultiAgentEnv):
         #             print(key)
         #             print(action[key])
         #             print(env_spec.action_space[key])
-        return all([action[key] in env_spec.action_space[key] for key in action])
+
+        return all([action[key] in env_spec.action_space["agent_0"][key] for key in action])
         # TODO validate above works as intended - below was failing for unknown reasons
         # return action in env_spec.action_space

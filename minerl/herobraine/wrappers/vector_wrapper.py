@@ -88,6 +88,10 @@ class Vectorized(EnvWrapper):
 
     def _unwrap_observation(self, obs: OrderedDict, agent) -> OrderedDict:
         if agent == "agent_1" or AGENT_0_VECTORIZED:
+
+            assert np.max(obs['vector']) <= 1
+            assert np.min(obs['vector']) >= 0
+
             full_obs = self.common_observation_space[agent].unmap_mixed(obs['vector'], obs)
             return intersect_space(self.env_to_wrap.observation_space[agent], full_obs)
         else:
@@ -95,6 +99,10 @@ class Vectorized(EnvWrapper):
 
     def _unwrap_action(self, act: OrderedDict, agent) -> OrderedDict:
         if agent == "agent_1" or AGENT_0_VECTORIZED:
+
+            assert np.max(act['vector']) <= 1
+            assert np.min(act['vector']) >= 0
+
             full_act = self.common_action_space[agent].unmap_mixed(act['vector'], act)
             return intersect_space(self.env_to_wrap.action_space[agent], full_act)
         else:

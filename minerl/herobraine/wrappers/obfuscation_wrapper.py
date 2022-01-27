@@ -129,6 +129,10 @@ class Obfuscated(EnvWrapper):
         return act
 
     def _unwrap_observation(self, obs: OrderedDict, agent) -> OrderedDict:
+
+        assert np.max(obs['vector']) <= 1.2
+        assert np.min(obs['vector']) >= -1.2
+
         if agent == "agent_1" or AGENT_0_OBF:
             obs['vector'] = np.clip(
                 self.obs_dec(obs['vector']),  # decode then CLIP
@@ -137,6 +141,10 @@ class Obfuscated(EnvWrapper):
 
     def _unwrap_action(self, act: OrderedDict, agent) -> OrderedDict:
         if agent == "agent_1" or AGENT_0_OBF:
+
+            assert np.max(act['vector']) <= 1.05
+            assert np.min(act['vector']) >= -1.05
+
             act['vector'] = np.clip(
                 self.ac_dec(act['vector']),  # decode then CLIP
                 0, 1)

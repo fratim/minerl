@@ -26,8 +26,8 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 NS = "{http://ProjectMalmo.microsoft.com}"
 STEP_OPTIONS = 0
 
-MAX_WAIT = 600 * 10   # TODO undo this at some pont # Time to wait before raising an exception (high value because some operations we wait on are very slow)
-SOCKTIME = 60.0 * 4 *10 # TODO undo this at some pont # After this much time a socket exception will be thrown.
+MAX_WAIT = 600
+SOCKTIME = 60.0 * 4
 TICK_LENGTH = 0.05
 
 logger = logging.getLogger(__name__)
@@ -256,7 +256,7 @@ class _MultiAgentEnv(gym.Env):
         )
 
         # TODO this will be fixed when moved into env spec
-        # assert self._check_action(actor_name, action_in, bottom_env_spec)
+        assert self._check_action(actor_name, action_in, bottom_env_spec)
 
         action_str = []
         for h in bottom_env_spec.actionables:
