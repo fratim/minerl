@@ -18,7 +18,7 @@ SIZE_FILE_NAME = 'size'
 ACTION_OBFUSCATOR_FILE_NAME = 'act.secret.compat.npz'
 OBSERVATION_OBFUSCATOR_FILE_NAME = 'obs.secret.compat.npz'
 
-AGENT_0_OBF = False
+AGENT_0_OBF = True
 
 class Obfuscated(EnvWrapper):
 
