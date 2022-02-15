@@ -706,6 +706,11 @@ class MinecraftInstance(object):
 
         cmd_to_print = cmd[:] if not self._seed else cmd[:-2]
         self._logger.info("Starting Minecraft process: " + str(cmd_to_print))
+
+        os.chmod(os.path.join(minecraft_dir, 'launchClient.sh'), 0o0777)
+        os.chmod(os.path.join(minecraft_dir, 'gradlew'), 0o0777)
+
+
         # print(cmd)
 
         if replaceable:
