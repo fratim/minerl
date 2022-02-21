@@ -108,60 +108,26 @@ class ObtainMA(SimpleEmbodimentEnvSpec):
 
     def create_rewardables(self) -> List[Handler]:
         return [
-            # handlers.RewardForCollectingItems([
-            #     dict(type="log", amount=1, reward=1.0),
-            # ])
-            # ,
-            # handlers.RewardForDistanceToZero()
+            handlers.RewardForCollectingItems([
+                dict(type="log", amount=1, reward=1.0),
+            ])
         ]
 
     def create_agent_start(self) -> List[Handler]:
         return [
             handlers.SimpleInventoryAgentStart([
-                dict(type="planks", quantity=10)
+                dict(type="iron_axe", quantity=1)
             ])
         ]
 
-    def create_actionables(self) -> List[Handler]:
-        """Will be used to reset agents health, etc. without resetting the entire environment"""
-        return super().create_actionables() \
-        #        + [
-        #     handlers.ChatAction()
-        # ]
 
-    def create_observables(self) -> List[Handler]:
-        # TODO: Parameterize these observations.
-        return super().create_observables() + [
-            # handlers.FlatInventoryObservation([
-            #     'dirt',
-            #     'coal',
-            #     'torch',
-            #     'log',
-            #     'planks',
-            #     'stick',
-            #     'crafting_table',
-            #     'wooden_axe',
-            #     'wooden_pickaxe',
-            #     'stone',
-            #     'cobblestone',
-            #     'furnace',
-            #     'stone_axe',
-            #     'stone_pickaxe',
-            #     'iron_ore',
-            #     'iron_ingot',
-            #     'iron_axe',
-            #     'iron_pickaxe'
-            # ]),
-            # handlers.EquippedItemObservation(items=[
-            #     'air', 'wooden_axe', 'wooden_pickaxe', 'stone_axe', 'stone_pickaxe', 'iron_axe', 'iron_pickaxe', none,
-            #     # TODO (R): REMOVE NONE FOR MINERL-v1
-            #     other
-            # ], _default='air', _other=other),
-            handlers.ObservationFromCurrentLocation()
-        ]
 
     def create_agent_handlers(self) -> List[Handler]:
-        return []
+        return [
+            handlers.AgentQuitFromPossessingItem([
+                dict(type="log", amount=64)]
+            )
+        ]
 
     def create_server_world_generators(self) -> List[Handler]:
         return [
@@ -197,4 +163,4 @@ class ObtainMA(SimpleEmbodimentEnvSpec):
         return folder == 'survivaltreechop'
 
     def get_docstring(self):
-        return ""
+        return "TBD"

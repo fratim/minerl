@@ -42,28 +42,29 @@ class AssistWrapper(gym.Wrapper):
             rew = rew[self.assist_agent]
             info = info[self.assist_agent]
 
-        processed_reward = self.post_process_reward(rew, obs)
+        # processed_reward = self.post_process_reward(rew, obs)
+        processed_reward = rew
 
         return obs, processed_reward, done, info
 
-    def post_process_reward(self, reward, obs):
-
-        assert reward == 0
-        target_pos = np.array([0, 0, 0])
-        if "raw" in obs.keys():
-            cur_location = obs["raw"]["location_stats"]
-        else:
-            cur_location = obs["location_stats"]
-
-        cur_pos = np.array([cur_location["xpos"], cur_location["ypos"], cur_location["zpos"]])
-
-        assert np.abs(cur_location["xpos"]) < 10000 and np.abs(cur_location["ypos"]) < 10000 and np.abs(cur_location["zpos"])< 10000
-
-        delta = np.linalg.norm(target_pos - cur_pos)
-
-        reward = -1*delta
-
-        return reward
+    # def post_process_reward(self, reward, obs):
+    #
+    #     assert reward == 0
+    #     target_pos = np.array([0, 0, 0])
+    #     if "raw" in obs.keys():
+    #         cur_location = obs["raw"]["location_stats"]
+    #     else:
+    #         cur_location = obs["location_stats"]
+    #
+    #     cur_pos = np.array([cur_location["xpos"], cur_location["ypos"], cur_location["zpos"]])
+    #
+    #     assert np.abs(cur_location["xpos"]) < 10000 and np.abs(cur_location["ypos"]) < 10000 and np.abs(cur_location["zpos"])< 10000
+    #
+    #     delta = np.linalg.norm(target_pos - cur_pos)
+    #
+    #     reward = -1*delta
+    #
+    #     return reward
 
 
 
