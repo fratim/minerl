@@ -23,6 +23,7 @@ import functools
 import time
 import logging
 import Pyro4
+import serpent
 
 logger = logging.getLogger(__name__)
 
@@ -54,6 +55,10 @@ def retry(func):
 
 
 def send_message(sock, data):
+
+    if isinstance(data, dict):
+        data = serpent.tobytes(data)
+
     length = len(data)
     sock.sendall(struct.pack('!I', length))
     sock.sendall(data)

@@ -22,6 +22,7 @@ from concurrent.futures import ThreadPoolExecutor
 
 from minerl.herobraine.env_spec import EnvSpec
 from typing import Any, Callable, Dict, List, Optional, Tuple
+import serpent
 
 NS = "{http://ProjectMalmo.microsoft.com}"
 STEP_OPTIONS = 0
@@ -32,6 +33,11 @@ TICK_LENGTH = 0.05
 
 logger = logging.getLogger(__name__)
 
+def receive_message(instance):
+    data = instance.client_socket_recv_message()
+    if isinstance(data, dict):
+        data = serpent.tobytes(data)
+    return data
 
 class _MultiAgentEnv(gym.Env):
     """
@@ -290,10 +296,10 @@ class _MultiAgentEnv(gym.Env):
                         instance.client_socket_send_message(step_message.encode())
 
                         # Receive the observation.
-                        obs = instance.client_socket_recv_message()
+                        obs = receive_message(instance)
 
                         # Receive reward done and sent.
-                        reply = instance.client_socket_recv_message()
+                        reply = receive_message(instance)
                         reward, done, sent = struct.unpack("!dbb", reply)
                         # TODO: REFACTOR TO USE REWARD HANDLERS INSTEAD OF MALMO REWARD.
                         done = (done == 1)
@@ -301,7 +307,7 @@ class _MultiAgentEnv(gym.Env):
                         self.has_finished[actor_name] = self.has_finished[actor_name] or done
 
                         # Receive info from the environment.
-                        _malmo_json = instance.client_socket_recv_message().decode("utf-8")
+                        _malmo_json = receive_message(instance).decode("utf-8")
 
                         # Process the observation and done state.
                         out_obs, monitor = self._process_observation(actor_name, obs, _malmo_json)
@@ -611,7 +617,7 @@ class _MultiAgentEnv(gym.Env):
             instance.client_socket_send_message(mission_xml)
             instance.client_socket_send_message(token)
 
-            reply = instance.client_socket_recv_message()
+            reply = receive_message(instance)
             ok, = struct.unpack("!I", reply)
             if ok != 1:
                 num_retries += 1
@@ -631,10 +637,10 @@ class _MultiAgentEnv(gym.Env):
             for actor_name, instance in zip(self.task.agent_names, self.instances):
                 start_time = time.time()
                 instance.client_socket_send_message(peek_message.encode())
-                obs = instance.client_socket_recv_message()
-                info = instance.client_socket_recv_message().decode('utf-8')
+                obs = receive_message(instance)
+                info = receive_message(instance).decode('utf-8')
 
-                reply = instance.client_socket_recv_message()
+                reply = receive_message(instance)
                 done, = struct.unpack('!b', reply)
                 self.has_finished[actor_name] = self.has_finished[actor_name] or done
                 multi_done = multi_done and done == 1
@@ -754,7 +760,7 @@ class _MultiAgentEnv(gym.Env):
         logger.info("Attempting to quit: {instance}".format(instance=instance))
         # while not has_quit:
         instance.client_socket_send_message("<Quit/>".encode())
-        reply = instance.client_socket_recv_message()
+        reply = receive_message(instance)
         ok, = struct.unpack('!I', reply)
         has_quit = not (ok == 0)
         # TODO: Get this to work properly
