@@ -53,11 +53,6 @@ java \
 :{dotminecraft}/libraries/net/java/dev/jna/platform/3.4.0/platform-3.4.0.jar\
 :{dotminecraft}/libraries/com/ibm/icu/icu4j-core-mojang/51.2/icu4j-core-mojang-51.2.jar\
 :{dotminecraft}/libraries/net/sf/jopt-simple/jopt-simple/5.0.3/jopt-simple-5.0.3.jar\
-:{dotminecraft}/libraries/com/paulscode/codecjorbis/20101023/codecjorbis-20101023.jar\
-:{dotminecraft}/libraries/com/paulscode/codecwav/20101023/codecwav-20101023.jar\
-:{dotminecraft}/libraries/com/paulscode/libraryjavasound/20101123/libraryjavasound-20101123.jar\
-:{dotminecraft}/libraries/com/paulscode/librarylwjglopenal/20100824/librarylwjglopenal-20100824.jar\
-:{dotminecraft}/libraries/com/paulscode/soundsystem/20120107/soundsystem-20120107.jar\
 :{dotminecraft}/libraries/io/netty/netty-all/4.1.9.Final/netty-all-4.1.9.Final.jar\
 :{dotminecraft}/libraries/com/google/guava/guava/21.0/guava-21.0.jar\
 :{dotminecraft}/libraries/org/apache/commons/commons-lang3/3.5/commons-lang3-3.5.jar\
